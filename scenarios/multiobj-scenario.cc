@@ -66,7 +66,7 @@ main(int argc, char* argv[])
     double bandwidth = 5e6;
     double totalTxPower = 43;
 
-    bool enableOfdma = false;
+    std::string scheduler = "TdmaQos";
 
     uint8_t priorityTrafficScenario = 0; // default is saturation
 
@@ -102,9 +102,7 @@ main(int argc, char* argv[])
                  "tag to be appended to output filenames to distinguish simulation campaigns",
                  simTag);
     cmd.AddValue("outputDir", "directory where to store simulation results", outputDir);
-    cmd.AddValue("enableOfdma",
-                 "If set to true it enables Ofdma scheduler. Default value is false (Tdma)",
-                 enableOfdma);
+    cmd.AddValue("scheduler", "Scheduler type, e.g. OfdmaPF, TdmaRR, OfdmaQos", scheduler);
 
     cmd.Parse(argc, argv);
 
@@ -194,13 +192,18 @@ main(int argc, char* argv[])
     nrHelper->SetEpcHelper(nrEpcHelper);
     nrEpcHelper->SetAttribute("S1uLinkDelay", TimeValue(MilliSeconds(0)));
 
-    std::stringstream schedulerType;
-    std::string subType;
-    std::string sched;
+    // std::stringstream schedulerType;
+    // std::string subType;
+    // std::string sched;
 
-    subType = !enableOfdma ? "Tdma" : "Ofdma";
-    sched = "Qos";
-    schedulerType << "ns3::NrMacScheduler" << subType << sched;
+    // subType = !enableOfdma ? "Tdma" : "Ofdma";
+    // sched = "Qos";
+    // schedulerType << "ns3::NrMacScheduler" << subType << sched;
+    // std::cout << "SchedulerType: " << schedulerType.str() << std::endl;
+    // nrHelper->SetSchedulerTypeId(TypeId::LookupByName(schedulerType.str()));
+
+    std::stringstream schedulerType;
+    schedulerType << "ns3::NrMacScheduler" << scheduler;
     std::cout << "SchedulerType: " << schedulerType.str() << std::endl;
     nrHelper->SetSchedulerTypeId(TypeId::LookupByName(schedulerType.str()));
 
